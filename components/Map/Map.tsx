@@ -17,7 +17,7 @@ const Map: FC<Props> = ({}): JSX.Element => {
   useEffect(() => {
     const unSubscribe = onSnapshot(peopleCollectionRef, (snapshot) => {
       // @ts-ignore
-      setPersons(snapshot.docs.map((doc) => doc.data()));
+      setPersons(snapshot?.docs?.map((doc) => doc.data()));
     });
     return () => unSubscribe();
   }, [persons, peopleCollectionRef]);
