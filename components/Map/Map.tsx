@@ -38,7 +38,7 @@ const Map = ({}): JSX.Element => {
             const filterData = persons?.filter(
               (person) => person.user_id !== old?.user_id
             );
-            setPersons(filterData);
+            return setPersons(filterData);
           }
 
           setPersons((prev) => [...prev, payload.new]);
@@ -59,10 +59,11 @@ const Map = ({}): JSX.Element => {
   }, []);
 
   // @ts-ignore
+  console.log(persons);
 
   return (
     <MapContainer
-      className="h-[40rem] w-full"
+      className="h-screen w-full"
       center={[5.47631, 7.025853]}
       zoom={10}
       scrollWheelZoom={false}
@@ -71,22 +72,15 @@ const Map = ({}): JSX.Element => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {persons?.length > 0 ? (
-        persons?.map((person: DataProps, i) => (
-          <Marker
-            key={i}
-            position={[
-              person?.latitude || 5.6767,
-              person?.longitude || 7.02555,
-            ]}
-            icon={icon}
-          >
-            <Popup>{person?.name}</Popup>
-          </Marker>
-        ))
-      ) : (
-        <Marker position={[5.47631, 7.025853]} icon={icon} />
-      )}
+      {persons?.map((person: DataProps, i) => (
+        <Marker
+          key={i}
+          position={[person?.latitude || 5.6767, person?.longitude || 7.02555]}
+          icon={icon}
+        >
+          <Popup>{person?.name}</Popup>
+        </Marker>
+      ))}
     </MapContainer>
   );
 };

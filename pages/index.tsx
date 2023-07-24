@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Inter } from 'next/font/google';
-import Map from '@/components/Map';
+import Map from '@/components/Map/Index';
 
 const inter = Inter({ subsets: ['latin'] });
 
