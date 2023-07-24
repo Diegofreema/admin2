@@ -40,7 +40,7 @@ const Map = ({}): JSX.Element => {
             );
             return setPersons(filterData);
           }
-// @ts-ignore
+          // @ts-ignore
           setPersons((prev) => [...prev, payload.new]);
         }
       )
