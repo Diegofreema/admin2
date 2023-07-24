@@ -40,7 +40,7 @@ const Map = ({}): JSX.Element => {
             );
             return setPersons(filterData);
           }
-
+// @ts-ignore
           setPersons((prev) => [...prev, payload.new]);
         }
       )
@@ -58,8 +58,7 @@ const Map = ({}): JSX.Element => {
     getData();
   }, []);
 
-  // @ts-ignore
-  console.log(persons);
+ 
 
   return (
     <MapContainer
