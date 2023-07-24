@@ -11,6 +11,7 @@ type DataProps = {
   longitude: number;
   name: string;
   id: number;
+  user_id: string;
 };
 const icon = new Icon({
   iconUrl:
@@ -19,6 +20,7 @@ const icon = new Icon({
 });
 const Map = ({}): JSX.Element => {
   const [persons, setPersons] = useState<DataProps[] | null>();
+  const [id, setId] = useState('');
   useEffect(() => {
     const channelA = supabase
       .channel('userData')
@@ -31,16 +33,23 @@ const Map = ({}): JSX.Element => {
         },
         (payload) => {
           // @ts-ignore
+          const { eventType, old } = payload;
+          if (eventType === 'DELETE') {
+            const filterData = persons?.filter(
+              (person) => person.user_id !== old?.user_id
+            );
+            setPersons(filterData);
+          }
+
           setPersons((prev) => [...prev, payload.new]);
         }
       )
       .subscribe();
-    console.log('running');
 
     return () => {
       supabase.removeChannel(channelA);
     };
-  }, []);
+  }, [persons]);
   useEffect(() => {
     const getData = async () => {
       const { data } = await supabase.from('userData').select();
@@ -48,7 +57,8 @@ const Map = ({}): JSX.Element => {
     };
     getData();
   }, []);
-  console.log(persons);
+
+  // @ts-ignore
 
   return (
     <MapContainer
@@ -61,15 +71,22 @@ const Map = ({}): JSX.Element => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {persons?.map((person: DataProps, i) => (
-        <Marker
-          key={i}
-          position={[person.latitude, person.longitude]}
-          icon={icon}
-        >
-          <Popup>{person.name}</Popup>
-        </Marker>
-      ))}
+      {persons?.length > 0 ? (
+        persons?.map((person: DataProps, i) => (
+          <Marker
+            key={i}
+            position={[
+              person?.latitude || 5.6767,
+              person?.longitude || 7.02555,
+            ]}
+            icon={icon}
+          >
+            <Popup>{person?.name}</Popup>
+          </Marker>
+        ))
+      ) : (
+        <Marker position={[5.47631, 7.025853]} icon={icon} />
+      )}
     </MapContainer>
   );
 };
